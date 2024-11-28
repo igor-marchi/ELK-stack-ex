@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  elasticsearch:
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+    volumes:
+      - ./data/elasticsearch_data:/usr/share/elasticsearch/data
+
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:8.12.0
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+
+  mysql:
+    container_name: mysql
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=elastic_db
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./data/mysql_data:/var/lib/mysql
+      - ./data/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+  logstash:
+    container_name: logstash
+    image: docker.elastic.co/logstash/logstash:8.12.0
+    volumes:
+      - ./logstash/pipeline/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+      - ./logstash/lib/mysql-connector-java-8.0.30.jar:/usr/share/logstash/mysql-connector-java-8.0.30.jar:ro
+    depends_on:
+      - elasticsearch
+      - mysql
+volumes:
+  elasticsearch_data:
+  mysql_data:

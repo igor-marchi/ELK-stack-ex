@@ -50,6 +50,37 @@ O script SQL de inicialização está localizado em `data/init.sql`. Ele cria as
 2. Execute o comando `docker-compose up` na raiz do projeto.
 3. Acesse o Kibana em [http://localhost:5601](http://localhost:5601) para visualizar os dados indexados.
 
+## Como Visualizar Dados no Kibana
+
+1. **Acesse o Kibana:**
+
+   - Abra o navegador e vá para [http://localhost:5601](http://localhost:5601).
+
+2. **Verifique os Índices Criados:**
+
+   - Navegue até a seção de gerenciamento de índices em [http://localhost:5601/app/management/data/index_management/indices](http://localhost:5601/app/management/data/index_management/indices).
+   - Verifique se os índices `users` e `products` foram criados corretamente.
+
+3. **Crie um Padrão de Índice (Index Pattern):**
+
+   - Vá para [http://localhost:5601/app/management/kibana/indexPatterns](http://localhost:5601/app/management/kibana/indexPatterns).
+   - Clique em "Create index pattern".
+   - No campo "Index pattern", digite `users` e clique em "Next step".
+   - Selecione o campo `@timestamp` como o campo de filtro de tempo e clique em "Create index pattern".
+   - Repita o processo para o índice `products`.
+
+4. **Visualize os Dados no Discover:**
+
+   - Navegue até a seção Discover em [http://localhost:5601/app/discover](http://localhost:5601/app/discover).
+   - No menu suspenso de seleção de índice, escolha `users` para visualizar os dados dos usuários.
+   - Explore os dados utilizando os filtros e visualizações disponíveis.
+   - Para visualizar os dados dos produtos, selecione o índice `products` no menu suspenso de seleção de índice.
+
+5. **Crie Visualizações e Dashboards:**
+   - Vá para [http://localhost:5601/app/visualize](http://localhost:5601/app/visualize) para criar visualizações baseadas nos dados dos índices.
+   - Utilize gráficos de barras, linhas, tortas, entre outros, para representar os dados.
+   - Para criar dashboards, vá para [http://localhost:5601/app/dashboards](http://localhost:5601/app/dashboards) e combine várias visualizações em um único painel.
+
 ## .gitignore
 
 Os diretórios `elasticsearch_data` e `mysql_data` estão ignorados no controle de versão para evitar o versionamento de dados persistentes.

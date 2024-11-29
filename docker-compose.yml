@@ -12,6 +12,14 @@ services:
       - "9200:9200"
     volumes:
       - ./data/elasticsearch_data:/usr/share/elasticsearch/data
+    depends_on:
+      - init-elasticsearch
+
+  init-elasticsearch:
+    image: busybox
+    command: sh -c "mkdir -p /usr/share/elasticsearch/data && chown -R 1000:1000 /usr/share/elasticsearch/data && chmod -R 755 /usr/share/elasticsearch/data"
+    volumes:
+      - ./data/elasticsearch_data:/usr/share/elasticsearch/data
 
   kibana:
     container_name: kibana

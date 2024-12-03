@@ -1,0 +1,23 @@
+### Get all customers
+GET http://localhost:3000/customers
+Content-Type: application/json
+
+### Get customers by id
+GET http://localhost:3000/customers?id=1
+Content-Type: application/json
+
+### Get customers by email
+GET http://localhost:3000/customers?email=test@example.com
+Content-Type: application/json
+
+### Get customers by cpf_cnpj
+GET http://localhost:3000/customers?cpf_cnpj=12345678900
+Content-Type: application/json
+
+### Get customers by name
+GET http://localhost:3000/customers?name=John Doe
+Content-Type: application/json
+
+### Get customers by multiple filters
+GET http://localhost:3000/customers?id=1&email=test@example.com&cpf_cnpj=12345678900&name=John Doe
+Content-Type: application/json

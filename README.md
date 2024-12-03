@@ -1,48 +1,6 @@
-# Projeto de Integração ELK com MySQL
+# Projeto de Integração ELK com MySQL e API
 
 Este projeto configura um ambiente de integração entre Elasticsearch, Logstash, Kibana (ELK Stack) e MySQL usando Docker Compose. O objetivo é extrair dados de um banco de dados MySQL e indexá-los no Elasticsearch para visualização no Kibana.
-
-## Serviços
-
-### Elasticsearch
-
-- Imagem: `docker.elastic.co/elasticsearch/elasticsearch:8.12.0`
-- Porta: `9200`
-- Volumes: `./data/elasticsearch_data:/usr/share/elasticsearch/data`
-- Configuração: Executado como um nó único com segurança desativada para simplificação.
-
-### Kibana
-
-- Imagem: `docker.elastic.co/kibana/kibana:8.12.0`
-- Porta: `5601`
-- Dependências: `elasticsearch`
-- Configuração: Conectado ao Elasticsearch para visualização dos dados indexados.
-
-### MySQL
-
-- Imagem: `mysql:8.0`
-- Porta: `3307`
-- Volumes:
-  - `./data/mysql_data:/var/lib/mysql`
-  - `./data/init.sql:/docker-entrypoint-initdb.d/init.sql:ro`
-- Configuração: Banco de dados inicializado com tabelas e dados de exemplo.
-
-### Logstash
-
-- Imagem: `docker.elastic.co/logstash/logstash:8.12.0`
-- Volumes:
-  - Arquivos de configuração das pipelines para `users` e `products`.
-  - Conector JDBC para MySQL.
-- Dependências: `elasticsearch`, `mysql`
-- Configuração: Duas pipelines separadas para processar dados de `users` e `products` do MySQL e indexá-los no Elasticsearch.
-
-## Configuração do Logstash
-
-Os arquivos de configuração do Logstash estão localizados na pasta `logstash/pipeline`. Eles definem a entrada de dados a partir do MySQL e a saída para o Elasticsearch. As pipelines são configuradas para rodar a cada minuto e rastrear atualizações nas tabelas `users` e `products`.
-
-## Inicialização do Banco de Dados
-
-O script SQL de inicialização está localizado em `data/init.sql`. Ele cria as tabelas `roles`, `users` e `products`, e insere dados iniciais para facilitar o teste e a demonstração.
 
 ## Como Executar
 
@@ -82,6 +40,81 @@ O script SQL de inicialização está localizado em `data/init.sql`. Ele cria as
    - Utilize gráficos de barras, linhas, tortas, entre outros, para representar os dados.
    - Para criar dashboards, vá para [http://localhost:5601/app/dashboards](http://localhost:5601/app/dashboards) e combine várias visualizações em um único painel.
 
-## .gitignore
+## Arquivo .env
 
-Os diretórios `elasticsearch_data` e `mysql_data` estão ignorados no controle de versão para evitar o versionamento de dados persistentes.
+O arquivo .env na raiz do projeto contém as variáveis de ambiente necessárias para o aplicativo Node.js:
+
+PORT=3000
+ELASTICSEARCH_NODE=http://localhost:9200
+
+## Arquivo request.http
+
+O arquivo request.http permite testar os endpoints do aplicativo Node.js diretamente do VS Code:
+
+### Get all customers
+
+GET http://localhost:3000/customers
+Content-Type: application/json
+
+### Get customers by id
+
+GET http://localhost:3000/customers?id=1
+Content-Type: application/json
+
+### Get customers by email
+
+GET http://localhost:3000/customers?email=test@example.com
+Content-Type: application/json
+
+### Get customers by cpf_cnpj
+
+GET http://localhost:3000/customers?cpf_cnpj=12345678900
+Content-Type: application/json
+
+### Get customers by name
+
+GET http://localhost:3000/customers?name=John Doe
+Content-Type: application/json
+
+### Get customers by multiple filters
+
+GET http://localhost:3000/customers?id=1&email=test@example.com&cpf_cnpj=12345678900&name=John Doe
+Content-Type: application/json
+
+## Serviços
+
+### Elasticsearch
+
+- Imagem: `docker.elastic.co/elasticsearch/elasticsearch:8.12.0`
+- Porta: `9200`
+- Volumes: `./data/elasticsearch_data:/usr/share/elasticsearch/data`
+- Configuração: Executado como um nó único com segurança desativada para simplificação.
+
+### Kibana
+
+- Imagem: `docker.elastic.co/kibana/kibana:8.12.0`
+- Porta: `5601`
+- Dependências: `elasticsearch`
+- Configuração: Conectado ao Elasticsearch para visualização dos dados indexados.
+
+### Logstash
+
+- Imagem: `docker.elastic.co/logstash/logstash:8.12.0`
+- Volumes:
+  - Arquivos de configuração das pipelines para `users` e `products`.
+  - Conector JDBC para MySQL.
+- Dependências: `elasticsearch`, `mysql`
+- Configuração: Duas pipelines separadas para processar dados de `users` e `products` do MySQL e indexá-los no Elasticsearch.
+
+### Node.js App
+
+- Imagem: Construída a partir do Dockerfile localizado em ./app
+- Porta: 3000
+- Volumes:
+  - ./app:/app
+  - /app/node_modules
+- Configuração: Aplicativo Node.js configurado para consumir dados do Elasticsearch e expor endpoints para consulta.
+
+## Configuração do Logstash
+
+Os arquivos de configuração do Logstash estão localizados na pasta `logstash/pipeline`. Eles definem a entrada de dados a partir do MySQL e a saída para o Elasticsearch. As pipelines são configuradas para rodar a cada minuto e rastrear atualizações na tabela `customer`.

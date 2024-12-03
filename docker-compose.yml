@@ -38,5 +38,22 @@ services:
       - ./logstash/lib/mysql-connector-java-8.0.30.jar:/usr/share/logstash/mysql-connector-java-8.0.30.jar:ro
     depends_on:
       - elasticsearch
+
+  node-app:
+    container_name: node-app
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - ELASTICSEARCH_NODE=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    volumes:
+      - ./app:/app
+      - /app/node_modules
+      
 volumes:
   elasticsearch_data:

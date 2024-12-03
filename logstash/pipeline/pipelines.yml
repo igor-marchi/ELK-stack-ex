@@ -1,5 +1,2 @@
-- pipeline.id: users_pipeline
-  path.config: "/usr/share/logstash/pipeline/logstash_users.conf"
-
-- pipeline.id: products_pipeline
-  path.config: "/usr/share/logstash/pipeline/logstash_products.conf"
+- pipeline.id: customer_pipeline
+  path.config: "/usr/share/logstash/pipeline/logstash_customer.conf"

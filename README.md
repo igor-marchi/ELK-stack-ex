@@ -48,7 +48,8 @@ O script SQL de inicialização está localizado em `data/init.sql`. Ele cria as
 
 1. Certifique-se de ter o Docker e o Docker Compose instalados.
 2. Execute o comando `docker-compose up` na raiz do projeto.
-3. Acesse o Kibana em [http://localhost:5601](http://localhost:5601) para visualizar os dados indexados.
+3. Execute o comando `sudo docker network connect elk-stack-node-api-ex_default containers-db-1` na raiz do projeto. Este comando conecta o contêiner do banco de dados MySQL à rede padrão criada pelo Docker Compose, permitindo que o Logstash acesse o MySQL.
+4. Acesse o Kibana em [http://localhost:5601](http://localhost:5601) para visualizar os dados indexados.
 
 ## Como Visualizar Dados no Kibana
 

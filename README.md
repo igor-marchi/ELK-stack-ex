@@ -118,3 +118,9 @@ Content-Type: application/json
 ## Configuração do Logstash
 
 Os arquivos de configuração do Logstash estão localizados na pasta `logstash/pipeline`. Eles definem a entrada de dados a partir do MySQL e a saída para o Elasticsearch. As pipelines são configuradas para rodar a cada minuto e rastrear atualizações na tabela `customer`.
+
+## Representação do fluxo
+
+![Fluxo do projeto](public/flow.svg)
+
+![Fluxo de dados](public/data-flow.svg)
